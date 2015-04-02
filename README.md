@@ -1,5 +1,5 @@
 # Minecraft - UsefulAPI
-==============
+--------
 一个为了方便开发Minecraft服务端(for BukkitAPI)插件的API。
 
 用途/功能
