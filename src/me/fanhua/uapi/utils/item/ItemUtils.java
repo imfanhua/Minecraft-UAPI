@@ -22,9 +22,7 @@ public class ItemUtils {
 			ItemUtils.methodToCraft = ClassUtils.getMethod(ItemUtils.clazCraft, "asCraftCopy", false, ItemStack.class);
 			ItemUtils.fieldHandle = ClassUtils.getField(ItemUtils.clazCraft, "handle", true);
 			ItemUtils.fieldTag = ClassUtils.getField(ItemUtils.fieldHandle.getType(), "tag", true);
-		} catch (Throwable error) {
-			error.printStackTrace();
-		}
+		} catch (Throwable error) {}
 	}
 	
 	public static ItemStack toCraftItem(ItemStack item) {
@@ -33,7 +31,6 @@ public class ItemUtils {
 		try {
 			return (ItemStack) ItemUtils.methodToCraft.invoke(null, item);
 		} catch (Throwable error) {
-			error.printStackTrace();
 			return null;
 		}
 	}
@@ -42,7 +39,6 @@ public class ItemUtils {
 		try {
 			return ItemUtils.fieldHandle.get(item);
 		} catch (Throwable error) {
-			error.printStackTrace();
 			return null;
 		}
 	}
@@ -51,7 +47,6 @@ public class ItemUtils {
 		try {
 			Object object = ItemUtils.fieldTag.get(ItemUtils.getServerItem(item));
 			if (object == null) return new NBTTagCompound();
-			System.out.println(object);
 			return (NBTTagCompound) NBTTag.create(object);
 		} catch (Throwable error) {
 			return null;

@@ -21,6 +21,7 @@ public class PlayerListener implements Listener {
 		event.setJoinMessage(null);
 		
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		user.resetAll();
 		
 		Bukkit.getPluginManager().callEvent(new UserReadyEvent(user));
@@ -41,8 +42,9 @@ public class PlayerListener implements Listener {
 	private void onExit(Player player) {
 		User user = UserManager.getUser(player);
 		if (user == null) return;
+		user.setOffline();
 		
-		user.getGuiManager().close();
+		user.getGuiManager().close(false);
 		user.getSkillManager().removeAll();
 		
 		Bukkit.getPluginManager().callEvent(new UserExitEvent(user));

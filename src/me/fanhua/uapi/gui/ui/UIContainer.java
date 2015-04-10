@@ -1,96 +1,27 @@
-package me.fanhua.uapi.gui;
+package me.fanhua.uapi.gui.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import me.fanhua.uapi.gui.GuiContainer;
 import me.fanhua.uapi.gui.event.ClickAction;
 import me.fanhua.uapi.gui.render.Render;
-import me.fanhua.uapi.gui.render.RenderObject;
-import me.fanhua.uapi.gui.type.GuiType;
 import me.fanhua.uapi.gui.ui.UI;
-import me.fanhua.uapi.user.User;
 
-public abstract class Gui implements GuiContainer {
-	
-	private GuiType type;
+public abstract class UIContainer extends UI implements GuiContainer {
 	
 	private List<UI> ui;
 	
 	private boolean needDraw;
 	
-	private Player player;
-	
-	private int tick;
-	private int tickTime;
-	
-	public Gui(GuiType type) {
-		this.type = type;
-		
+	public UIContainer() {
 		this.ui = new ArrayList<UI>();
 	}
 	
-	public GuiType getType() {
-		return this.type;
-	}
-	
 	public Player getPlayer() {
-		return this.player;
-	}
-	
-	public User getUser() {
-		return User.toUser(this.player);
-	}
-	
-	public void onOpen() {}
-	
-	public void onClose() {
-		this.player = null;
-	}
-	
-	public void tick() {
-		int tick = this.tick++;
-		if (this.tick < 0) this.tick = 0;
-		
-		this.update(tick);
-		
-		if (this.needDraw) {
-			this.needDraw = false;
-			this.draw();
-		}
-	}
-	
-	public int getTick() {
-		return this.tick;
-	}
-	
-	public void init(Player player) {
-		this.player = player;
-		this.type.initInventory(player);
-		
-		this.tick = 0;
-		this.tick();
-	}
-	
-	public void onTickTime() {
-		if (this.tickTime++ >= this.getTickTime()) {
-			this.tickTime = 0;
-			this.tick();
-		} else if (this.needDraw) {
-			this.needDraw = false;
-			this.draw();
-		}
-	}
-	
-	public int getTickTime() {
-		return 10;
-	}
-	
-	private void draw() {
-		RenderObject render = this.type.newRender();
-		this.draw(render, tick);
-		render.draw();
+		return this.getContainer().getPlayer();
 	}
 	
 	@Override
@@ -114,12 +45,15 @@ public abstract class Gui implements GuiContainer {
 	
 	@Override
 	public boolean isNeedDraw() {
-		return this.needDraw;
+		if (!this.needDraw) return false;
+		this.needDraw = false;
+		return true;
 	}
 	
 	@Override
 	public void setNeedDraw() {
-		this.needDraw = true;
+		if (this.getContainer() == null) this.needDraw = true;
+		else this.getContainer().setNeedDraw();
 	}
 	
 	@Override
@@ -186,11 +120,24 @@ public abstract class Gui implements GuiContainer {
 		return size;
 	}
 	
-	public void close() {
-		if (this.player == null) return;
-		User user = User.toUser(this.player);
-		if (user == null) return;
-		user.closeGui();
+	private int offsetX;
+	private int offsetY;
+	private int resetWidth;
+	private int resetHeight;
+	
+	protected void transform(Render render, int x, int y, int width, int height) {
+		this.offsetX = x;
+		this.offsetY = y;
+		this.resetWidth = render.getWidth();
+		this.resetHeight = render.getHeight();
+		
+		render.transform(x, y);
+		render.resize(this.resetWidth < width ? this.resetWidth : width, this.resetHeight < height ? this.resetHeight : height);
 	}
+	
+	protected void reset(Render render) {
+		render.transform(-this.offsetX, -this.offsetY);
+		render.resize(this.resetWidth, this.resetHeight);
+ 	}
 	
 }

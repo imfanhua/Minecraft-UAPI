@@ -1,9 +1,10 @@
 package me.fanhua.uapi.user;
 
+import me.fanhua.uapi.gui.Gui;
 import me.fanhua.uapi.network.Network;
 import me.fanhua.uapi.network.Packet;
-import me.fanhua.uapi.user.api.UserGuiManager;
-import me.fanhua.uapi.user.api.UserSkillManager;
+import me.fanhua.uapi.user.manager.UserGuiManager;
+import me.fanhua.uapi.user.manager.UserSkillManager;
 import me.fanhua.uapi.utils.particle.ParticleEffect;
 
 import org.bukkit.entity.Player;
@@ -13,6 +14,8 @@ import org.bukkit.inventory.PlayerInventory;
 public class User {
 	
 	public static User toUser(Player player) {
+		if (!player.isOnline()) return null;
+		
 		User user = UserManager.getUser(player);
 		if (user != null) {
 			user.player = player;
@@ -28,6 +31,8 @@ public class User {
 	private UserGuiManager gui;
 	private UserSkillManager skill;
 	
+	private boolean offline;
+	
 	private User(Player player) {
 		this.player = player;
 	}
@@ -36,24 +41,12 @@ public class User {
 		return this.player;
 	}
 	
-	public boolean isAdminGroup() {
-		return this.getGroup() > 0;
+	public boolean isOffline() {
+		return this.offline;
 	}
 	
-	public int getGroup() {
-		return this.player.isOp() ? 999 : 0;
-	}
-	
-	public boolean isVIP() {
-		return this.getVIPLevel() > 0;
-	}
-	
-	public int getVIPLevel() {
-		return 0;
-	}
-	
-	public int getCoin() {
-		return 0;
+	public void setOffline() {
+		this.offline = true;
 	}
 	
 	public UserGuiManager getGuiManager() {
@@ -65,7 +58,7 @@ public class User {
 	}
 	
 	public void resetAll() {
-		if (this.gui != null) this.gui.close();
+		if (this.gui != null) this.closeGui();
 		this.gui = UserGuiManager.create(this);
 		
 		if (this.skill != null) this.skill.removeAll();
@@ -103,6 +96,26 @@ public class User {
 		} catch (Throwable error) {
 			return false;
 		}
+	}
+	
+	public void openGui(Gui gui) {
+		this.gui.open(gui);
+	}
+	
+	public void closeGui() {
+		this.gui.close(false);
+	}
+	
+	public Gui getGui() {
+		return this.gui.getGui();
+	}
+	
+	public <T extends Gui> T getGui(Class<? extends T> type) {
+		return this.gui.getGui(type);
+	}
+	
+	public boolean hasGui() {
+		return this.gui.hasGui();
 	}
 	
 }

@@ -28,7 +28,7 @@ public class CommandListener implements Listener {
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 		String message = event.getMessage().toLowerCase();
 		
-		for (String command : CommandListener.commands) if (message.equals("/" + command) || message.equals("/" + command + " ")) {
+		for (String command : CommandListener.commands) if (message.equals("/" + command) || message.startsWith("/" + command + " ")) {
 			event.setCancelled(true);
 			return;
 		}

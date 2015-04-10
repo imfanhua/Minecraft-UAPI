@@ -1,22 +1,21 @@
 package me.fanhua.uapi.gui.type;
 
-import me.fanhua.uapi.gui.render.RenderChest;
+import me.fanhua.uapi.gui.render.RenderDispenser;
 import me.fanhua.uapi.gui.render.RenderObject;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public class GuiTypeChest implements GuiType {
+public class GuiTypeDispenser implements GuiType {
 	
 	private String title;
-	private int height;
 	
 	private Inventory inventory;
 	
-	public GuiTypeChest(String title, int height) {
+	public GuiTypeDispenser(String title) {
 		this.title = title;
-		this.height = height;
 	}
 	
 	public String getTitle() {
@@ -25,27 +24,27 @@ public class GuiTypeChest implements GuiType {
 	
 	@Override
 	public void initInventory(InventoryHolder holder) {
-		this.inventory = Bukkit.createInventory(holder, this.height * 9, this.title);
+		this.inventory = Bukkit.createInventory(holder, InventoryType.DISPENSER, this.title);
 	}
 	
 	@Override
 	public RenderObject newRender() {
-		return new RenderChest(this);
+		return new RenderDispenser(this);
 	}
 	
 	@Override
 	public Inventory getInventory() {
 		return this.inventory;
 	}
-
+	
 	@Override
 	public int getWidth() {
-		return 9;
+		return 3;
 	}
 	
 	@Override
 	public int getHeight() {
-		return this.height;
+		return 3;
 	}
 	
 }

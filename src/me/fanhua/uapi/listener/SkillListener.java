@@ -51,6 +51,7 @@ public class SkillListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerToggleSprintEvent(PlayerToggleSprintEvent event) {
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		SkillSprintEvent object = new SkillSprintEvent(user, event.isSprinting());
 		
 		this.doEvent(user, object);
@@ -60,6 +61,7 @@ public class SkillListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerToggleFlightEvent(PlayerToggleFlightEvent event) {
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		SkillFlightEvent object = new SkillFlightEvent(user, event.isFlying());
 		
 		this.doEvent(user, object);
@@ -69,6 +71,7 @@ public class SkillListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerToggleSneakEvent(PlayerToggleSneakEvent event) {
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		SkillSneakEvent object = new SkillSneakEvent(user, event.isSneaking());
 		
 		this.doEvent(user, object);
@@ -78,6 +81,7 @@ public class SkillListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		Action action = event.getAction();
 		
 		if (action == Action.PHYSICAL) {
@@ -115,6 +119,7 @@ public class SkillListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		
 		SkillEvent object = new SkillClickEntityEvent(user, false, event.getRightClicked());
 		this.doEvent(user, object);
@@ -132,6 +137,7 @@ public class SkillListener implements Listener {
 	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
 		if (event.getDamager().getType() != EntityType.PLAYER) return;
 		User user = User.toUser((Player) event.getDamager());
+		if (user == null) return;
 		
 		SkillEvent object = new SkillClickEntityEvent(user, true, event.getEntity());
 		this.doEvent(user, object);
@@ -148,6 +154,7 @@ public class SkillListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
 		User user = User.toUser(event.getPlayer());
+		if (user == null) return;
 		SkillDropEvent object = new SkillDropEvent(user, event.getItemDrop());
 		
 		this.doEvent(user, object);
