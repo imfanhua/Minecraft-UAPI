@@ -1,5 +1,5 @@
-# Minecraft - UsefulAPI
-一个为了方便开发Minecraft服务端(for Spigot)插件的API。
+# UsefulAPI - Doc
+一个为了方便开发Minecraft服务端(for BukkitAPI)插件的API。
 
 用途/功能
 --------
@@ -35,21 +35,6 @@
   * 8.3 颜色工具 (进度: 10%)
 ```
 
-使用方法
+使用方法/文档/例子
 --------
-1.在您插件 plugin.yml 中的 depend 内添加 UsefulAPI。
-
-例如:
-```yml
-name: MyPlugin
-main: me.xxx.plugin.Main
-depend: [UsefulAPI]
-```
-
-2.导入 UsefulAPI 的Jar包。
-
-3.告诉安装者他们需要也安装上 UsefulAPI 这个插件。
-
-例子
---------
-待编辑
+都在 [WIKI(维基)](https://github.com/imfanhua/Minecraft-UAPI/wiki) 内。
