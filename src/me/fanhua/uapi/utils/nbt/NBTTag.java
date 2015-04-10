@@ -11,14 +11,19 @@ public abstract class NBTTag {
 	static {
 		try {
 			NBTTag.methodGetType = ClassUtils.getMethod(ClassUtils.getServerClass("NBTBase"), "getTypeId", false);
-		} catch (Throwable error) {}
+		} catch (Throwable error) {
+			error.printStackTrace();
+		}
 	}
 	
 	public static NBTTag create(Object object) {
+		if (object == null) return null;
+		
 		try {
 			NBTType type = NBTType.getType((Integer) NBTTag.methodGetType.invoke(object));
 			return (NBTTag) type.getCreateMethod().invoke(null, object);
 		} catch (Throwable error) {
+			error.printStackTrace();
 			return null;
 		}
 	}

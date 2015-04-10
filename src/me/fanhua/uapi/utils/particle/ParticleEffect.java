@@ -77,7 +77,7 @@ public class ParticleEffect {
 	}
 	
 	public void play(World world) {
-		for (Player player : world.getPlayers()) User.toUser(player).play(this);
+		for (Player player : world.getPlayers()) if (this.canSee(player.getLocation())) User.toUser(player).send(this.getPacket());
 	}
 	
 	public Packet getPacket() {

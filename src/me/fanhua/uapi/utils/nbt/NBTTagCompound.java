@@ -92,6 +92,7 @@ public class NBTTagCompound extends NBTTag {
 		try {
 			return (Map) NBTTagCompound.fieldMap.get(this.object);
 		} catch (Throwable error) {
+			error.printStackTrace();
 			return null;
 		}
 	}

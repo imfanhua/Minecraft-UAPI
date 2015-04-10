@@ -21,7 +21,7 @@ public class ItemUtils {
 			ItemUtils.clazCraft = ClassUtils.getCraftClass("inventory.CraftItemStack");
 			ItemUtils.methodToCraft = ClassUtils.getMethod(ItemUtils.clazCraft, "asCraftCopy", false, ItemStack.class);
 			ItemUtils.fieldHandle = ClassUtils.getField(ItemUtils.clazCraft, "handle", true);
-			ItemUtils.fieldTag = ClassUtils.getField(ItemUtils.fieldHandle.getType(), "tag", false);
+			ItemUtils.fieldTag = ClassUtils.getField(ItemUtils.fieldHandle.getType(), "tag", true);
 		} catch (Throwable error) {
 			error.printStackTrace();
 		}
@@ -51,9 +51,9 @@ public class ItemUtils {
 		try {
 			Object object = ItemUtils.fieldTag.get(ItemUtils.getServerItem(item));
 			if (object == null) return new NBTTagCompound();
+			System.out.println(object);
 			return (NBTTagCompound) NBTTag.create(object);
 		} catch (Throwable error) {
-			error.printStackTrace();
 			return null;
 		}
 	}
