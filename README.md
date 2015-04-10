@@ -1,5 +1,5 @@
 # UsefulAPI - Doc
-一个为了方便开发Minecraft服务端(for BukkitAPI)插件的API。
+一个为了方便开发Minecraft服务端(for Spigot)插件的API。
 
 用途/功能
 --------
@@ -38,3 +38,7 @@
 使用方法/文档/例子
 --------
 都在 [WIKI(维基)](https://github.com/imfanhua/Minecraft-UAPI/wiki) 内。
+
+问题/使用上的不解/Bugs
+--------
+请在 [Issues](https://github.com/imfanhua/Minecraft-UAPI/issues) 中发帖告诉我。
