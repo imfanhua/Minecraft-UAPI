@@ -1,7 +1,7 @@
 package me.fanhua.uapi.task;
 
-import me.fanhua.uapi.UAPI;
 import me.fanhua.uapi.gui.Gui;
+import me.fanhua.uapi.manager.TaskManager;
 import me.fanhua.uapi.user.User;
 import me.fanhua.uapi.user.UserManager;
 
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class TaskGuiTick implements Runnable {
 	
 	public static void addTask() {
-		UAPI.addTask(new TaskGuiTick(), 1);
+		TaskManager.addTask(new TaskGuiTick(), 1);
 	}
 	
 	private TaskGuiTick() {}

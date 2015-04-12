@@ -1,6 +1,6 @@
 package me.fanhua.uapi.task;
 
-import me.fanhua.uapi.UAPI;
+import me.fanhua.uapi.manager.TaskManager;
 import me.fanhua.uapi.skill.Skill;
 import me.fanhua.uapi.user.User;
 import me.fanhua.uapi.user.UserManager;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class TaskSkill implements Runnable {
 	
 	public static void addTask() {
-		UAPI.addTask(new TaskSkill(), 10);
+		TaskManager.addTask(new TaskSkill(), 10);
 	}
 	
 	private TaskSkill() {}

@@ -1,8 +1,8 @@
 package me.fanhua.uapi.utils.item.tag;
 
-import me.fanhua.uapi.utils.nbt.NBTTag;
-import me.fanhua.uapi.utils.nbt.NBTTagCompound;
-import me.fanhua.uapi.utils.nbt.NBTTagInt;
+import me.fanhua.uapi.nbt.NBTTag;
+import me.fanhua.uapi.nbt.NBTTagCompound;
+import me.fanhua.uapi.nbt.NBTTagInt;
 
 import org.bukkit.Color;
 import org.bukkit.inventory.ItemStack;

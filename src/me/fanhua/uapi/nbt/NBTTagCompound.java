@@ -1,4 +1,4 @@
-package me.fanhua.uapi.utils.nbt;
+package me.fanhua.uapi.nbt;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -53,6 +53,12 @@ public class NBTTagCompound extends NBTTag {
 	public <T extends NBTTag> T get(String key, Class<? extends T> target) {
 		NBTTag tag = NBTTag.create(this.getMap().get(key));
 		if (tag == null || !tag.getClass().getName().equals(target.getName())) return null;
+		return (T) tag;
+	}
+	
+	public <T extends NBTTag> T get(String key, Class<? extends T> target, T defaults) {
+		NBTTag tag = NBTTag.create(this.getMap().get(key));
+		if (tag == null || !tag.getClass().getName().equals(target.getName())) return defaults;
 		return (T) tag;
 	}
 	

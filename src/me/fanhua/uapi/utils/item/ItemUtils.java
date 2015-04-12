@@ -3,9 +3,9 @@ package me.fanhua.uapi.utils.item;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import me.fanhua.uapi.nbt.NBTTag;
+import me.fanhua.uapi.nbt.NBTTagCompound;
 import me.fanhua.uapi.utils.ClassUtils;
-import me.fanhua.uapi.utils.nbt.NBTTag;
-import me.fanhua.uapi.utils.nbt.NBTTagCompound;
 
 import org.bukkit.inventory.ItemStack;
 

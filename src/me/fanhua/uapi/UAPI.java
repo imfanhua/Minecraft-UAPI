@@ -1,19 +1,14 @@
 package me.fanhua.uapi;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
-import me.fanhua.uapi.listener.CommandListener;
-import me.fanhua.uapi.listener.GuiListener;
-import me.fanhua.uapi.listener.NoBreakListener;
 import me.fanhua.uapi.listener.PlayerListener;
-import me.fanhua.uapi.listener.SkillListener;
-import me.fanhua.uapi.task.TaskGuiTick;
-import me.fanhua.uapi.task.TaskSkill;
+import me.fanhua.uapi.manager.MapManager;
+import me.fanhua.uapi.manager.RuleManager;
 
 public class UAPI extends JavaPlugin {
 	
@@ -23,101 +18,33 @@ public class UAPI extends JavaPlugin {
 		return UAPI.instance;
 	}
 	
+	private static RuleManager rules;
+	
 	@Override
 	public void onEnable() {
 		UAPI.instance = this;
 		
-		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+		UAPI.rules = new RuleManager();
 		
-		UAPI.ruleGui = false;
-		UAPI.ruleBanCommands = false;
-		UAPI.ruleNoBreak = false;
-		UAPI.ruleSkill = false;
+		UAPI.addListener(this, new PlayerListener());
 	}
 	
 	@Override
 	public void onDisable() {
-		if (UAPI.reloadKick != null) for (Player player : Bukkit.getOnlinePlayers()) player.kickPlayer(UAPI.reloadKick);
+		String reloadKick = UAPI.rules.getReloadKick();
+		if (reloadKick != null) for (Player player : Bukkit.getOnlinePlayers()) player.kickPlayer(reloadKick);
 	}
 	
-	private static String reloadKick;
-	
-	public static void addReloadKick(String message) {
-		UAPI.reloadKick = message;
+	public static RuleManager getRuleManager() {
+		return UAPI.rules;
 	}
 	
-	public static void removeReloadKick() {
-		UAPI.reloadKick = null;
+	public static MapManager getMapManager() {
+		return MapManager.getInstance();
 	}
 	
-	private static boolean ruleGui;
-	
-	public static void addGuiRule() {
-		if (UAPI.ruleGui) return;
-		UAPI.ruleGui = true;
-		
-		UAPI.addListener(new GuiListener());
-		TaskGuiTick.addTask();
-	}
-	
-	private static boolean ruleBanCommands;
-	
-	public static void addBanCommandsRule() {
-		if (UAPI.ruleBanCommands) return;
-		UAPI.ruleBanCommands = true;
-		
-		UAPI.addListener(new CommandListener());
-	}
-	
-	private static boolean ruleNoBreak;
-	
-	public static void addNoBreakRule() {
-		if (UAPI.ruleNoBreak) return;
-		UAPI.ruleNoBreak = true;
-		
-		UAPI.addListener(new NoBreakListener());
-	}
-	
-	public static void addNoBreakRule(World world) {
-		if (UAPI.ruleNoBreak) return;
-		
-		UAPI.addListener(new NoBreakListener(world.getName()));
-	}
-	
-	public static void addNoBreakRule(String world) {
-		if (UAPI.ruleNoBreak) return;
-		
-		UAPI.addListener(new NoBreakListener(world));
-	}
-	
-	private static boolean ruleSkill;
-	
-	public static void addSkillRule() {
-		if (UAPI.ruleSkill) return;
-		UAPI.ruleSkill = true;
-		
-		TaskSkill.addTask();
-		UAPI.addListener(new SkillListener());
-	}
-	
-	public static void runNextTick(Runnable runnable) {
-		UAPI.runTask(runnable, 0);
-	}
-	
-	public static void runTask(Runnable runnable, long time) {
-		Bukkit.getScheduler().runTaskLater(UAPI.instance, runnable, time);
-	}
-	
-	public static BukkitTask addTask(Runnable runnable, long time) {
-		return UAPI.addTask(runnable, time, time);
-	}
-	
-	public static BukkitTask addTask(Runnable runnable, long time, long later) {
-		return Bukkit.getScheduler().runTaskTimer(UAPI.instance, runnable, time, later);
-	}
-	
-	public static void addListener(Listener listener) {
-		Bukkit.getPluginManager().registerEvents(listener, UAPI.instance);
+	public static void addListener(Plugin plugin, Listener listener) {
+		Bukkit.getPluginManager().registerEvents(listener, plugin);
 	}
 	
 }

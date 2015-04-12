@@ -1,4 +1,4 @@
-package me.fanhua.uapi.utils.nbt;
+package me.fanhua.uapi.nbt;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
