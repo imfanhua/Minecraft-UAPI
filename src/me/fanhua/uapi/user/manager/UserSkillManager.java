@@ -3,11 +3,20 @@ package me.fanhua.uapi.user.manager;
 import me.fanhua.uapi.skill.Skill;
 import me.fanhua.uapi.skill.SkillManager;
 import me.fanhua.uapi.user.User;
+import me.fanhua.uapi.user.manager.base.IManagerRegister;
+import me.fanhua.uapi.user.manager.base.IUserManager;
 
-public class UserSkillManager {
+public final class UserSkillManager implements IUserManager {
 	
-	public static UserSkillManager create(User user) {
-		return new UserSkillManager(user);
+	public static final IManagerRegister REGISTER = new Register();
+	
+	private static class Register implements IManagerRegister {
+
+		@Override
+		public void register(User user) {
+			user.addManager(new UserSkillManager(user));
+		}
+		
 	}
 	
 	private User user;
@@ -39,7 +48,7 @@ public class UserSkillManager {
 	public void addSkill(Skill skill) {
 		if (this.skill.hasSkill(skill)) return;
 		this.skill.addSkill(skill);
-		skill.getRender().render();
+		skill.getRender().draw();
 	}
 	
 	public Skill[] getSkills() {
@@ -54,6 +63,11 @@ public class UserSkillManager {
 	public void removeAll() {
 		for (Skill skill : this.skill.getSkills()) skill.remove();
 		this.skill.clear();
+	}
+
+	@Override
+	public void onOffline() {
+		this.removeAll();
 	}
 	
 }

@@ -11,6 +11,7 @@ import org.bukkit.map.MapView;
 public class MapImageRender extends MapRenderer {
 	
 	private Image image;
+	private boolean draw;
 	
 	private byte[] data;
 	private int width;
@@ -30,11 +31,20 @@ public class MapImageRender extends MapRenderer {
 		this.data = MapPalette.imageToBytes(image);
 		this.width = image.getWidth(null);
 		this.height = image.getHeight(null);
+		
+		this.redraw();
+	}
+	
+	public void redraw() {
+		this.draw = true;
 	}
 	
 	@Override
 	public void render(MapView view, MapCanvas canvas, Player player) {
-        for (int x = 0; x < this.width; x++)  for (int y = 0; y < this.height; y++) canvas.setPixel(x, y, this.data[x + y * this.height]);
+		if (!this.draw) return;
+		this.draw = false;
+		
+		for (int x = 0; x < this.width; x++)  for (int y = 0; y < this.height; y++) canvas.setPixel(x, y, this.data[x + y * this.height]);
 	}
 	
 }

@@ -5,15 +5,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.fanhua.uapi.event.base.UEvent;
-import me.fanhua.uapi.event.base.UListener;
-import me.fanhua.uapi.gui.event.tool.CheckBoxSelectedEvent;
-import me.fanhua.uapi.gui.event.ui.UICheckBoxSelectedEvent;
+import me.fanhua.uapi.event.EventTag;
+import me.fanhua.uapi.event.base.bus.UBus;
+import me.fanhua.uapi.event.base.event.UEvent;
 import me.fanhua.uapi.gui.ui.UICheckBox;
 
-public class CheckBoxLinker implements UListener<UICheckBoxSelectedEvent> {
+public class CheckBoxLinker {
 	
-	public final UEvent<CheckBoxSelectedEvent> EventSelected = new UEvent<CheckBoxSelectedEvent>();
+	public final UBus Bus = new UBus();
+	
+	public class SelectedEvent implements UEvent {
+		
+		private int code;
+		private int oldCode;
+		
+		private UICheckBox ui;
+		private UICheckBox oldUI;
+		
+		public SelectedEvent(int code, int oldCode, UICheckBox ui, UICheckBox oldUI) {
+			this.code = code;
+			this.oldCode = oldCode;
+			
+			this.ui = ui;
+			this.oldUI = oldUI;
+		}
+		
+		public CheckBoxLinker getLinker() {
+			return CheckBoxLinker.this;
+		}
+		
+		public UICheckBox getNewUI() {
+			return this.ui;
+		}
+		
+		public UICheckBox getOldUI() {
+			return this.oldUI;
+		}
+		
+		public int getNewCode() {
+			return this.code;
+		}
+		
+		public int getOldCode() {
+			return this.oldCode;
+		}
+		
+	}
 	
 	private Map<Integer, UICheckBox> map;
 	private Map<UICheckBox, Integer> codes;
@@ -51,7 +88,7 @@ public class CheckBoxLinker implements UListener<UICheckBoxSelectedEvent> {
 		this.map.put(code, ui);
 		this.codes.put(ui, code);
 		
-		ui.EventSelected.add(this);
+		ui.Bus.register(this);
 		return this;
 	}
 	
@@ -60,7 +97,7 @@ public class CheckBoxLinker implements UListener<UICheckBoxSelectedEvent> {
 		this.map.remove(code);
 		this.codes.remove(ui);
 		
-		ui.EventSelected.remove(this);
+		ui.Bus.unregister(this);
 	}
 	
 	public UICheckBox getUI(int code) {
@@ -78,7 +115,7 @@ public class CheckBoxLinker implements UListener<UICheckBoxSelectedEvent> {
 	}
 	
 	public void clear() {
-		for (UICheckBox ui : this.map.values()) ui.EventSelected.remove(this);
+		for (UICheckBox ui : this.map.values()) ui.Bus.unregister(this);;
 		this.map.clear();
 		this.codes.clear();
 	}
@@ -86,16 +123,17 @@ public class CheckBoxLinker implements UListener<UICheckBoxSelectedEvent> {
 	public int size() {
 		return this.map.size();
 	}
-
-	@Override
-	public void call(UICheckBoxSelectedEvent event) {
+	
+	@EventTag
+	@Deprecated
+	public void onSelected(UICheckBox.SelectedEvent event) {
 		UICheckBox ui = event.getUI();
-		ui.setSelected(true);
 		int code = this.getCode(ui);
 		if (this.selected == code) return;
 		
+		int old = this.selected;
 		this.setSelected(code);
-		this.EventSelected.call(new CheckBoxSelectedEvent(this, code, ui));
+		UBus.report(this.Bus.call(new SelectedEvent(code, old, ui, this.getUI(old))));
 	}
 	
 }

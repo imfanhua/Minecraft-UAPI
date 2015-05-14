@@ -5,11 +5,20 @@ import org.bukkit.entity.Player;
 import me.fanhua.uapi.gui.Gui;
 import me.fanhua.uapi.task.TaskOpenGui;
 import me.fanhua.uapi.user.User;
+import me.fanhua.uapi.user.manager.base.IManagerRegister;
+import me.fanhua.uapi.user.manager.base.IUserManager;
 
-public class UserGuiManager {
+public final class UserGuiManager implements IUserManager {
 	
-	public static UserGuiManager create(User user) {
-		return new UserGuiManager(user);
+	public static final IManagerRegister REGISTER = new Register();
+	
+	private static class Register implements IManagerRegister {
+
+		@Override
+		public void register(User user) {
+			user.addManager(new UserGuiManager(user));
+		}
+		
 	}
 	
 	private User user;
@@ -28,7 +37,7 @@ public class UserGuiManager {
 	}
 	
 	public void open(Gui gui) {
-		if (gui.getPlayer() != null) return;
+		if (gui.getManager() != null) return;
 		
 		if (this.hasGui()) {
 			this.close(false);
@@ -37,8 +46,7 @@ public class UserGuiManager {
 		}
 		
 		this.gui = gui;
-		gui.init(this.user.getPlayer());
-		this.user.getPlayer().openInventory(this.gui.getType().getInventory()); 
+		gui.init(this);
 	}
 	
 	public Gui getGui() {
@@ -53,7 +61,11 @@ public class UserGuiManager {
 		}
 	}
 	
+	public void close() {
+		this.close(false);
+	}
 	
+	@Deprecated
 	public void close(boolean event) {
 		if (this.gui == null) return;
 		if (event) {
@@ -63,6 +75,11 @@ public class UserGuiManager {
 			Player player = this.user.getPlayer();
 			if (player.getOpenInventory() != null) player.closeInventory();
 		}
+	}
+
+	@Override
+	public void onOffline() {
+		this.close();
 	}
 	
 }

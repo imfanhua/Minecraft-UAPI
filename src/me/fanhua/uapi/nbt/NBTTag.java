@@ -18,12 +18,17 @@ public abstract class NBTTag {
 		if (object == null) return null;
 		
 		try {
-			NBTType type = NBTType.getType((Integer) NBTTag.methodGetType.invoke(object));
+			NBTType type = NBTType.getType((byte) NBTTag.methodGetType.invoke(object));
 			return (NBTTag) type.getCreateMethod().invoke(null, object);
 		} catch (Throwable error) {
 			return null;
 		}
 	}
+	
+	@Override
+    public int hashCode() {
+        return this.getObject().hashCode();
+    }
 	
 	@Override
 	public boolean equals(Object object) {

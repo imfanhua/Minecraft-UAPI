@@ -7,7 +7,7 @@ import java.util.Set;
 
 import me.fanhua.uapi.utils.ClassUtils;
 
-public class NBTTagCompound extends NBTTag {
+public final class NBTTagCompound extends NBTTag {
 	
 	private static Class<?> clazzNBT;
 	

@@ -1,15 +1,32 @@
 package me.fanhua.uapi.gui.ui;
 
-import me.fanhua.uapi.event.base.UEvent;
+import me.fanhua.uapi.event.base.bus.UBus;
+import me.fanhua.uapi.event.base.event.UEvent;
 import me.fanhua.uapi.gui.event.ClickAction;
-import me.fanhua.uapi.gui.event.ui.UIButtonClickEvent;
 import me.fanhua.uapi.gui.render.Render;
 
 import org.bukkit.inventory.ItemStack;
 
 public class UIButton extends UI {
 	
-	public final UEvent<UIButtonClickEvent> EventClicked = new UEvent<UIButtonClickEvent>();
+	public final UBus Bus = new UBus();
+	
+	public class ClickEvent implements UEvent {
+		
+		private ClickAction action;
+		
+		public ClickEvent(ClickAction action) {
+			this.action = action;
+		}
+		
+		public UIButton getUI() {
+			return UIButton.this;
+		}
+		
+		public ClickAction getAction() {
+			return this.action;
+		}
+	}
 	
 	private int x;
 	private int y;
@@ -62,7 +79,7 @@ public class UIButton extends UI {
 		if (!this.isCanDoAction()) return;
 		
 		if (x != this.x || y != this.y || action.getType() != ClickAction.MOUSE) return;
-		this.EventClicked.call(new UIButtonClickEvent(this, action));
+		UBus.report(this.Bus.call(new ClickEvent(action)));
 	}
 	
 }

@@ -1,17 +1,24 @@
 package me.fanhua.uapi.user;
 
-import me.fanhua.uapi.gui.Gui;
-import me.fanhua.uapi.network.Network;
-import me.fanhua.uapi.network.Packet;
-import me.fanhua.uapi.user.manager.UserGuiManager;
-import me.fanhua.uapi.user.manager.UserSkillManager;
-import me.fanhua.uapi.utils.particle.ParticleEffect;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
+import me.fanhua.uapi.manager.UserManager;
+import me.fanhua.uapi.network.Network;
+import me.fanhua.uapi.network.packet.IPacket;
+import me.fanhua.uapi.network.packet.Packet;
+import me.fanhua.uapi.user.manager.base.IUserManager;
+
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class User {
+public final class User {
 	
 	public static User toUser(Player player) {
 		if (!player.isOnline()) return null;
@@ -23,18 +30,21 @@ public class User {
 		}
 		
 		user = new User(player);
+		UserManager.callRegisters(user);
 		UserManager.setUser(user);
 		return user;
 	}
 	
 	private Player player;
-	private UserGuiManager gui;
-	private UserSkillManager skill;
+	
+	private Map<String, IUserManager> managers;
 	
 	private boolean offline;
 	
 	private User(Player player) {
 		this.player = player;
+		
+		this.managers = new HashMap<String, IUserManager>();
 	}
 	
 	public Player getPlayer() {
@@ -42,35 +52,85 @@ public class User {
 	}
 	
 	public boolean isOffline() {
-		return this.offline;
-	}
-	
-	public void setOffline() {
-		this.offline = true;
-	}
-	
-	public UserGuiManager getGuiManager() {
-		return this.gui;
-	}
-	
-	public UserSkillManager getSkillManager() {
-		return this.skill;
-	}
-	
-	public void resetAll() {
-		if (this.gui != null) this.closeGui();
-		this.gui = UserGuiManager.create(this);
+		if (this.offline) return true;
+		if (!this.player.isOnline()) {
+			this.setOffline();
+			return true;
+		}
 		
-		if (this.skill != null) this.skill.removeAll();
-		this.skill = UserSkillManager.create(this);
+		return false;
 	}
 	
-	public int getHoldSlot() {
-		return this.player.getInventory().getHeldItemSlot();
+	@Deprecated
+	public void setOffline() {
+		if (this.offline) return;
+		this.offline = true;
+		
+		for (IUserManager manager : this.managers.values()) manager.onOffline();
 	}
 	
-	public boolean setHoldSlot(int slot) {
-		return this.send(new Packet("PlayOutHeldItemSlot").set("a", slot, false));
+	public IUserManager[] getManagers() {
+		return new ArrayList<IUserManager>(this.managers.values()).toArray(new IUserManager[this.managers.size()]);
+	}
+	
+	public <T extends IUserManager> T getManager(Class<T> type) {
+		return (T) this.managers.get(type.getName());
+	}
+	
+	public <T extends IUserManager> T addManager(T manager) {
+		Class<? extends IUserManager> type = manager.getClass();
+		T object = (T) this.getManager(type);
+		if (object != null) return object;
+		this.managers.put(type.getName(), manager);
+		return manager;
+	}
+	
+	public String getName() {
+		return this.player.getName();
+	}
+	
+	public UUID getUID() {
+		return this.player.getUniqueId();
+	}
+	
+	public boolean isDead() {
+		return this.player.isDead();
+	}
+	
+	public World getWorld() {
+		return this.player.getWorld();
+	}
+	
+	public Location getLocation() {
+		return this.player.getLocation();
+	}
+	
+	public PlayerInventory getInventory() {
+		return this.player.getInventory();
+	}
+	
+	public GameMode getGameMode() {
+		return this.player.getGameMode();
+	}
+	
+	public boolean isGameMode(GameMode mode) {
+		return this.player.getGameMode() == mode;
+	}
+	
+	public int getHeldSlot() {
+		return this.getInventory().getHeldItemSlot();
+	}
+	
+	public boolean setHeldSlot(int slot) {
+		return this.send(Packet.wrapper(Packet.OUT, "HeldItemSlot").write(slot));
+	}
+	
+	public ItemStack getItemInHand() {
+		return this.player.getItemInHand();
+	}
+	
+	public void setItemInHand(ItemStack item) {
+		this.player.setItemInHand(item);
 	}
 	
 	public void clearInventory() {
@@ -79,43 +139,12 @@ public class User {
 		inventory.setArmorContents(new ItemStack[4]);
 	}
 	
-	public boolean send(Packet packet) {
-		try {
-			Network.send(this.player, packet.getPacketObject());
-			return true;
-		} catch (Throwable error) {
-			return false;
-		}
+	public <T extends IUserManager> T get(Class<T> type) {
+		return this.getManager(type);
 	}
 	
-	public boolean play(ParticleEffect effect) {
-		if (!effect.canSee(this.getPlayer().getLocation())) return true;
-		
-		try {
-			return this.send(effect.getPacket());
-		} catch (Throwable error) {
-			return false;
-		}
-	}
-	
-	public void openGui(Gui gui) {
-		this.gui.open(gui);
-	}
-	
-	public void closeGui() {
-		this.gui.close(false);
-	}
-	
-	public Gui getGui() {
-		return this.gui.getGui();
-	}
-	
-	public <T extends Gui> T getGui(Class<? extends T> type) {
-		return this.gui.getGui(type);
-	}
-	
-	public boolean hasGui() {
-		return this.gui.hasGui();
+	public boolean send(IPacket packet) {
+		return Network.send(this.player, packet.getPacketObject());
 	}
 	
 }

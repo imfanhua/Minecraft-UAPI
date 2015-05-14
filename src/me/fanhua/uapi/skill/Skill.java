@@ -6,42 +6,41 @@ import me.fanhua.uapi.skill.hanlder.SkillHanlder;
 import me.fanhua.uapi.skill.render.SkillRender;
 import me.fanhua.uapi.user.User;
 
-public abstract class Skill {
+public abstract class Skill<T extends SkillRender> {
 	
 	private User user;
 	private SkillHanlder hanlder;
-	private SkillRender render;
+	private T render;
 	
 	private int use;
 	private int cd;
 	
 	public Skill(User user) {
 		this.user = user;
-		
 		this.cd = 1;
 	}
 	
-	public User getUser() {
+	public final User getUser() {
 		return this.user;
 	}
 	
-	public Player getPlayer() {
+	public final Player getPlayer() {
 		return this.user.getPlayer();
 	}
 	
-	public void setHanlder(SkillHanlder hanlder) {
+	public final void setHanlder(SkillHanlder hanlder) {
 		this.hanlder = hanlder;
 	}
 	
-	public SkillHanlder getHanlder() {
+	public final SkillHanlder getHanlder() {
 		return this.hanlder;
 	}
 	
-	public void setRender(SkillRender render) {
+	public final void setRender(T render) {
 		this.render = render;
 	}
 	
-	public SkillRender getRender() {
+	public final T getRender() {
 		return this.render;
 	}
 	
@@ -62,7 +61,7 @@ public abstract class Skill {
 			this.onUse();
 			this.onUseOut();
 		} else this.onUse();
-		this.render.render();
+		this.render.draw();
 	}
 	
 	public void goCD() {
@@ -78,7 +77,7 @@ public abstract class Skill {
 		this.cd = cd;
 		if (this.cd == 0) this.onCD();
 		else if (old == 0) this.onGoCD();
-		this.render.render();
+		this.render.draw();
 	}
 	
 	public void setUse(int use) {

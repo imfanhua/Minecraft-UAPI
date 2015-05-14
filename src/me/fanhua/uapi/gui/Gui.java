@@ -11,6 +11,7 @@ import me.fanhua.uapi.gui.render.RenderObject;
 import me.fanhua.uapi.gui.type.GuiType;
 import me.fanhua.uapi.gui.ui.UI;
 import me.fanhua.uapi.user.User;
+import me.fanhua.uapi.user.manager.UserGuiManager;
 
 public abstract class Gui implements GuiContainer {
 	
@@ -20,7 +21,7 @@ public abstract class Gui implements GuiContainer {
 	
 	private boolean needDraw;
 	
-	private Player player;
+	private UserGuiManager manager;
 	
 	private int tick;
 	private int tickTime;
@@ -35,18 +36,22 @@ public abstract class Gui implements GuiContainer {
 		return this.type;
 	}
 	
-	public Player getPlayer() {
-		return this.player;
+	public UserGuiManager getManager() {
+		return this.manager;
 	}
 	
 	public User getUser() {
-		return User.toUser(this.player);
+		return this.manager.getUser();
+	}
+	
+	public Player getPlayer() {
+		return this.getUser().getPlayer();
 	}
 	
 	public void onOpen() {}
 	
 	public void onClose() {
-		this.player = null;
+		this.manager = null;
 	}
 	
 	public void tick() {
@@ -65,12 +70,14 @@ public abstract class Gui implements GuiContainer {
 		return this.tick;
 	}
 	
-	public void init(Player player) {
-		this.player = player;
-		this.type.initInventory(player);
+	public void init(UserGuiManager manager) {
+		this.manager = manager;
+		this.type.initInventory(this.getPlayer());
 		
 		this.tick = 0;
 		this.tick();
+		
+		this.getPlayer().openInventory(this.type.getInventory());
 	}
 	
 	public void onTickTime() {
@@ -187,10 +194,8 @@ public abstract class Gui implements GuiContainer {
 	}
 	
 	public void close() {
-		if (this.player == null) return;
-		User user = User.toUser(this.player);
-		if (user == null) return;
-		user.closeGui();
+		if (this.manager == null) return;
+		this.manager.close();
 	}
 	
 }

@@ -1,16 +1,12 @@
-package me.fanhua.uapi;
+ package me.fanhua.uapi;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.fanhua.uapi.listener.PlayerListener;
-import me.fanhua.uapi.manager.MapManager;
+import me.fanhua.uapi.event.plugin.UAPIDisableEvent;
+import me.fanhua.uapi.manager.EventManager;
 import me.fanhua.uapi.manager.RuleManager;
 
-public class UAPI extends JavaPlugin {
+public final class UAPI extends JavaPlugin {
 	
 	private static UAPI instance;
 	
@@ -25,26 +21,16 @@ public class UAPI extends JavaPlugin {
 		UAPI.instance = this;
 		
 		UAPI.rules = new RuleManager();
-		
-		UAPI.addListener(this, new PlayerListener());
 	}
 	
 	@Override
 	public void onDisable() {
-		String reloadKick = UAPI.rules.getReloadKick();
-		if (reloadKick != null) for (Player player : Bukkit.getOnlinePlayers()) player.kickPlayer(reloadKick);
+		EventManager.call(new UAPIDisableEvent());
+		UAPI.rules.disable();
 	}
 	
 	public static RuleManager getRuleManager() {
 		return UAPI.rules;
-	}
-	
-	public static MapManager getMapManager() {
-		return MapManager.getInstance();
-	}
-	
-	public static void addListener(Plugin plugin, Listener listener) {
-		Bukkit.getPluginManager().registerEvents(listener, plugin);
 	}
 	
 }

@@ -8,7 +8,7 @@ public class ColorUtils {
 	
 	private static final Random random = new Random();
 	
-	public static Color randomColor() {
+	public static Color getRandomColor() {
 		return Color.fromBGR(ColorUtils.random.nextInt(256), ColorUtils.random.nextInt(256), ColorUtils.random.nextInt(256));
 	}
 	

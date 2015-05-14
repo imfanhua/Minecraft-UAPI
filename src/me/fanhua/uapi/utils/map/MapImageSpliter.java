@@ -5,14 +5,16 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import me.fanhua.uapi.item.builder.ItemBuilder;
 import me.fanhua.uapi.manager.MapManager;
-import me.fanhua.uapi.utils.item.builder.ItemBuilder;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.map.MapView;
 
 public class MapImageSpliter {
+	
+	public static final Color DEFAULTS = new Color(188, 152, 98);
 	
 	private int startId;
 	

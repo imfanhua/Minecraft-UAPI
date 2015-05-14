@@ -6,6 +6,16 @@ import me.fanhua.uapi.utils.ClassUtils;
 
 public class ParticleType {
 	
+	private static Method method;
+	
+	static {
+		try {
+			ParticleType.method = ClassUtils.getMethod(ClassUtils.getServerClass("EnumParticle"), "a", false, int.class);
+		} catch (Throwable error) {
+			error.printStackTrace();
+		}
+	}
+	
 	public static final ParticleType EXPLOSION_NORMAL = new ParticleType(0);
 	public static final ParticleType EXPLOSION_LARGE = new ParticleType(1);
 	public static final ParticleType EXPLOSION_HUGE = new ParticleType(2);
@@ -49,12 +59,6 @@ public class ParticleType {
 	public static final ParticleType ITEM_CRACK = new ParticleType(36);
 	public static final ParticleType BLOCK_CRACK = new ParticleType(37);
 	public static final ParticleType BLOCK_DUST = new ParticleType(38);
-	
-	private static Method method;
-	
-	static {
-		ParticleType.method = ClassUtils.getMethod(ClassUtils.getServerClass("EnumParticle"), "a", false, int.class);
-	}
 	
 	private int id;
 	private Object object;

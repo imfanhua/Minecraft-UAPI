@@ -8,7 +8,7 @@ public enum NBTType {
 	
 	BYTE(1, "Byte", NBTTagByte.class),
 	SHORT(2, "Short", NBTTagShort.class),
-	INT(3, "Int", NBTTagShort.class),
+	INT(3, "Int", NBTTagInt.class),
 	LONG(4, "Long", NBTTagLong.class),
 	FLOAT(5, "Float", NBTTagFloat.class),
 	DOUBLE(6, "Double", NBTTagDouble.class),
@@ -32,7 +32,7 @@ public enum NBTType {
 		this.clazz = clazz;
 		
 		try {
-			this.methodCreate = this.clazz.getMethod("create", clazz);
+			this.methodCreate = this.clazz.getMethod("create", Object.class);
 			
 			this.clazzNBT = (Class<?>) clazz.getMethod("getObjectClass").invoke(null);
 			this.methodRead = ClassUtils.getMethods(this.clazzNBT, "load", false, 3)[0];

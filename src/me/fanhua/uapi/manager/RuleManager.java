@@ -1,88 +1,64 @@
 package me.fanhua.uapi.manager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import me.fanhua.uapi.UAPI;
-import me.fanhua.uapi.listener.CommandListener;
-import me.fanhua.uapi.listener.GuiListener;
-import me.fanhua.uapi.listener.NoBreakListener;
-import me.fanhua.uapi.listener.SkillListener;
-import me.fanhua.uapi.task.TaskGuiTick;
-import me.fanhua.uapi.task.TaskSkill;
+import me.fanhua.uapi.rule.IRule;
 
-import org.bukkit.World;
-
-public class RuleManager {
+public final class RuleManager {
 	
 	public static RuleManager getInstance() {
 		return UAPI.getRuleManager();
 	}
 	
-	private String reloadKick;
-	private boolean ruleGui;
-	private boolean ruleBanCommands;
-	private boolean ruleNoBreak;
-	private boolean ruleSkill;
+	private boolean disabled;
+	private Map<String, IRule> rules;
 	
 	public RuleManager() {
-		this.reloadKick = null;
-		
-		this.ruleGui = false;
-		this.ruleBanCommands = false;
-		this.ruleNoBreak = false;
-		this.ruleSkill = false;
+		this.rules = new HashMap<String, IRule>();
 	}
 	
-	public void addReloadKick(String message) {
-		this.reloadKick = message;
+	public IRule[] getRules() {
+		return new ArrayList<IRule>(this.rules.values()).toArray(new IRule[this.rules.size()]);
 	}
 	
-	public String getReloadKick() {
-		return this.reloadKick;
+	public <T extends IRule> T getRule(Class<T> type) {
+		return (T) this.rules.get(type.getName());
 	}
 	
-	public void removeReloadKick() {
-		this.reloadKick = null;
+	public <T extends IRule> boolean hasRule(T type) {
+		return this.rules.containsKey(type.getClass().getName());
 	}
 	
-	public void addGuiRule() {
-		if (this.ruleGui) return;
-		this.ruleGui = true;
-		
-		UAPI.addListener(UAPI.getInstance(), new GuiListener());
-		TaskGuiTick.addTask();
+	public <T extends IRule> T addRule(T rule) {
+		Class<? extends IRule> type = rule.getClass();
+		T object = (T) this.getRule(type);
+		if (object != null) return object;
+		if (!rule.add(this)) return null;
+		this.rules.put(type.getName(), rule);
+		return rule;
 	}
 	
-	public void addBanCommandsRule() {
-		if (this.ruleBanCommands) return;
-		this.ruleBanCommands = true;
-		
-		UAPI.addListener(UAPI.getInstance(), new CommandListener());
+	public <T extends IRule> T removeRule(T rule) {
+		Class<? extends IRule> type = rule.getClass();
+		T object = (T) this.getRule(type);
+		if (object == null) return null;
+		if (!rule.remove(this)) return null;
+		this.rules.remove(type.getName());
+		return rule;
 	}
 	
-	public void addNoBreakRule() {
-		if (this.ruleNoBreak) return;
-		this.ruleNoBreak = true;
-		
-		UAPI.addListener(UAPI.getInstance(), new NoBreakListener());
+	public boolean isDisabled() {
+		return this.disabled;
 	}
 	
-	public void addNoBreakRule(World world) {
-		if (this.ruleNoBreak) return;
-		
-		UAPI.addListener(UAPI.getInstance(), new NoBreakListener(world.getName()));
-	}
-	
-	public void addNoBreakRule(String world) {
-		if (this.ruleNoBreak) return;
-		
-		UAPI.addListener(UAPI.getInstance(), new NoBreakListener(world));
-	}
-	
-	public void addSkillRule() {
-		if (this.ruleSkill) return;
-		this.ruleSkill = true;
-		
-		TaskSkill.addTask();
-		UAPI.addListener(UAPI.getInstance(), new SkillListener());
+	public void disable() {
+		if (this.disabled) return;
+		this.disabled = true;
+		for (IRule rule : this.rules.values()) rule.disable(this);
+		this.rules = null;
 	}
 	
 }

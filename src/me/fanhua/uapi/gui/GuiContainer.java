@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import me.fanhua.uapi.gui.event.ClickAction;
 import me.fanhua.uapi.gui.render.Render;
 import me.fanhua.uapi.gui.ui.UI;
+import me.fanhua.uapi.user.User;
+import me.fanhua.uapi.user.manager.UserGuiManager;
 
 public interface GuiContainer {
 	
@@ -27,6 +29,9 @@ public interface GuiContainer {
 	public boolean isNeedDraw();
 	public void setNeedDraw();
 	
+	public UserGuiManager getManager();
+	
+	public User getUser();
 	public Player getPlayer();
 	
 }

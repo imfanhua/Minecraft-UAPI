@@ -1,15 +1,27 @@
 package me.fanhua.uapi.gui.ui;
 
-import me.fanhua.uapi.event.base.UEvent;
+import me.fanhua.uapi.event.base.bus.UBus;
+import me.fanhua.uapi.event.base.event.UEvent;
 import me.fanhua.uapi.gui.event.ClickAction;
-import me.fanhua.uapi.gui.event.ui.UICheckBoxSelectedEvent;
 import me.fanhua.uapi.gui.render.Render;
 
 import org.bukkit.inventory.ItemStack;
 
 public class UICheckBox extends UI {
 	
-	public final UEvent<UICheckBoxSelectedEvent> EventSelected = new UEvent<UICheckBoxSelectedEvent>();
+	public final UBus Bus = new UBus();
+	
+	public class SelectedEvent implements UEvent {
+		
+		public UICheckBox getUI() {
+			return UICheckBox.this;
+		}
+		
+		public boolean isSelected() {
+			return UICheckBox.this.isSelected();
+		}
+		
+	}
 	
 	private int x;
 	private int y;
@@ -93,7 +105,7 @@ public class UICheckBox extends UI {
 		
 		if (x != this.x || y != this.y || action.getType() != ClickAction.MOUSE) return;
 		this.setSelected(!this.select);
-		this.EventSelected.call(new UICheckBoxSelectedEvent(this));
+		UBus.report(this.Bus.call(new SelectedEvent()));
 	}
 	
 }

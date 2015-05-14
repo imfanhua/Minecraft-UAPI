@@ -5,7 +5,7 @@ import me.fanhua.uapi.skill.Skill;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-public class SkillRenderItem extends SkillRender implements ISkillSelectRender {
+public final class SkillRenderItem extends SkillRender implements ISkillSelectRender {
 	
 	private int slot;
 	
@@ -31,7 +31,7 @@ public class SkillRenderItem extends SkillRender implements ISkillSelectRender {
 		this.item = item.clone();
 	}
 	
-	public SkillRenderItem noSelected() {
+	public SkillRenderItem setNoSelected() {
 		this.noSelected = true;
 		return this;
 	}
@@ -42,7 +42,7 @@ public class SkillRenderItem extends SkillRender implements ISkillSelectRender {
 	}
 	
 	public boolean isSelectedItem() {
-		return this.getSkill().getUser().getHoldSlot() == this.slot;
+		return this.getSkill().getUser().getHeldSlot() == this.slot;
 	}
 	
 	public int getSlot() {
@@ -91,7 +91,7 @@ public class SkillRenderItem extends SkillRender implements ISkillSelectRender {
 	}
 	
 	@Override
-	public void render() {
+	public void draw() {
 		Skill skill = this.getSkill();
 		int cd = skill.getCD();
 		int use = skill.getUse();

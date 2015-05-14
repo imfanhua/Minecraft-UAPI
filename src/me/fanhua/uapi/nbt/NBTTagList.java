@@ -6,7 +6,7 @@ import java.util.List;
 
 import me.fanhua.uapi.utils.ClassUtils;
 
-public class NBTTagList extends NBTTag {
+public final class NBTTagList extends NBTTag {
 	
 	private static Class<?> clazzNBT;
 	
@@ -15,12 +15,14 @@ public class NBTTagList extends NBTTag {
 	}
 	
 	private static Method methodClone;
+	private static Field fieldType;
 	private static Field fieldList;
 	
 	static {
 		try {
 			NBTTagList.clazzNBT = ClassUtils.getServerClass("NBTTagList");
 			NBTTagList.methodClone = ClassUtils.getMethod(NBTTagList.clazzNBT, "clone", false);
+			NBTTagList.fieldType = ClassUtils.getField(NBTTagList.clazzNBT, "type", true);
 			NBTTagList.fieldList = ClassUtils.getField(NBTTagList.clazzNBT, "list", true);
 		} catch (Throwable error) {}
 	}
@@ -41,11 +43,27 @@ public class NBTTagList extends NBTTag {
 		} catch (Throwable error) {}
 	}
 	
+	private void setListType(NBTTag tag) {
+		try {
+			NBTTagList.fieldType.set(this.object, (byte) tag.getType().getId());
+		} catch (Throwable error) {}
+	}
+	
+	public NBTType getListType() {
+		try {
+			return NBTType.getType((byte) NBTTagList.fieldType.get(this.object));
+		} catch (Throwable error) {
+			return null;
+		}
+	}
+	
 	public void add(NBTTag tag) {
+		this.setListType(tag);
 		this.getList().add(tag.getObject());
 	}
 	
 	public void add(int index, NBTTag tag) {
+		this.setListType(tag);
 		this.getList().add(index, tag.getObject());
 	}
 	

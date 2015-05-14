@@ -9,6 +9,8 @@ import me.fanhua.uapi.gui.GuiContainer;
 import me.fanhua.uapi.gui.event.ClickAction;
 import me.fanhua.uapi.gui.render.Render;
 import me.fanhua.uapi.gui.ui.UI;
+import me.fanhua.uapi.user.User;
+import me.fanhua.uapi.user.manager.UserGuiManager;
 
 public abstract class UIContainer extends UI implements GuiContainer {
 	
@@ -18,6 +20,14 @@ public abstract class UIContainer extends UI implements GuiContainer {
 	
 	public UIContainer() {
 		this.ui = new ArrayList<UI>();
+	}
+	
+	public UserGuiManager getManager() {
+		return this.getContainer().getManager();
+	}
+	
+	public User getUser() {
+		return this.getContainer().getUser();
 	}
 	
 	public Player getPlayer() {

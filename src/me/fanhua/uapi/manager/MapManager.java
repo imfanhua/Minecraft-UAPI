@@ -8,10 +8,10 @@ import org.bukkit.World;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
+import me.fanhua.uapi.item.builder.ItemBuilder;
 import me.fanhua.uapi.utils.ClassUtils;
-import me.fanhua.uapi.utils.item.builder.ItemBuilder;
 
-public class MapManager {
+public final class MapManager {
 	
 	private static MapManager instance = new MapManager();
 	

@@ -1,9 +1,10 @@
 package me.fanhua.uapi.gui.event.tool;
 
+import me.fanhua.uapi.event.base.event.UEvent;
 import me.fanhua.uapi.gui.tool.CheckBoxLinker;
 import me.fanhua.uapi.gui.ui.UICheckBox;
 
-public class CheckBoxSelectedEvent {
+public class CheckBoxSelectedEvent implements UEvent {
 	
 	private CheckBoxLinker linker;
 	

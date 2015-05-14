@@ -36,7 +36,7 @@ public class Particle {
 	public static final Particle Lava = new Particle(ParticleType.LAVA);
 	public static final Particle Footstep = new Particle(ParticleType.FOOTSTEP);
 	public static final Particle Cloud = new Particle(ParticleType.CLOUD);
-	public static final Particle Redstone = new Particle(ParticleType.REDSTONE);
+	public static final Particle Reddust = new Particle(ParticleType.REDSTONE);
 	public static final Particle SnowBall = new Particle(ParticleType.SNOWBALL);
 	public static final Particle SnowShovel = new Particle(ParticleType.SNOW_SHOVEL);
 	public static final Particle Slime = new Particle(ParticleType.SLIME);
@@ -81,7 +81,7 @@ public class Particle {
 	private ParticleType type;
 	private int[] args;
 	
-	private boolean force;
+	private boolean distance;
 	
 	private Particle(ParticleType type) {
 		this(type, new int[] {});
@@ -100,17 +100,17 @@ public class Particle {
 		return this.args;
 	}
 	
-	public Particle toForce() {
-		Particle particle = this.copy();
-		particle.force = true;
+	public Particle toLongDistance() {
+		Particle particle = this.clone();
+		particle.distance = true;
 		return particle;
 	}
 	
-	public boolean isForce() {
-		return this.force;
+	public boolean isLongDistance() {
+		return this.distance;
 	}
 	
-	private Particle copy() {
+	public Particle clone() {
 		return new Particle(this.type, this.args);
 	}
 	

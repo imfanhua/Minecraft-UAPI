@@ -10,11 +10,11 @@ public abstract class SkillRender {
 		this.skill = skill;
 	}
 	
-	public Skill getSkill() {
+	public final Skill getSkill() {
 		return this.skill;
 	}
 	
-	public abstract void render();
+	public abstract void draw();
 	public abstract void remove();
 	
 }

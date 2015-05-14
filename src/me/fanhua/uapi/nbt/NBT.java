@@ -11,7 +11,22 @@ import java.util.zip.GZIPOutputStream;
 
 import me.fanhua.uapi.utils.ClassUtils;
 
-public class NBT {
+public final class NBT {
+	
+	public final static Class<NBTTagCompound> MAP = NBTTagCompound.class;
+	public final static Class<NBTTagCompound> COMPOUBD = NBTTagCompound.class;
+	public final static Class<NBTTagList> LIST = NBTTagList.class;
+	
+	public final static Class<NBTTagByte> BYTE = NBTTagByte.class;
+	public final static Class<NBTTagShort> SHORT = NBTTagShort.class;
+	public final static Class<NBTTagInt> INT = NBTTagInt.class;
+	public final static Class<NBTTagLong> LONG = NBTTagLong.class;
+	public final static Class<NBTTagFloat> FLOAT = NBTTagFloat.class;
+	public final static Class<NBTTagDouble> DOUBLE = NBTTagDouble.class;
+	public final static Class<NBTTagString> STRING = NBTTagString.class;
+	
+	public final static Class<NBTTagArrayByte> ARRAY_BYTE = NBTTagArrayByte.class;
+	public final static Class<NBTTagArrayInt> ARRAY_INT = NBTTagArrayInt.class;
 	
 	private static Object nbtLimiter;
 	

@@ -1,5 +1,6 @@
 package me.fanhua.uapi.listener;
 
+import me.fanhua.uapi.api.API;
 import me.fanhua.uapi.gui.Gui;
 import me.fanhua.uapi.gui.event.ClickAction;
 import me.fanhua.uapi.gui.event.ClickActionDouble;
@@ -39,9 +40,9 @@ public class GuiListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClickEvent(InventoryClickEvent event) {
 		if (event.isCancelled()) return;
-		User user = User.toUser((Player) event.getWhoClicked());
+		User user = API.to((Player) event.getWhoClicked());
 		if (user == null) return;
-		Gui gui = user.getGui();
+		Gui gui = user.get(API.USER.GUI).getGui();
 		if (gui == null) return;
 		event.setCancelled(true);
 		
@@ -63,9 +64,9 @@ public class GuiListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryCloseEvent(InventoryCloseEvent event) {
-		User user = User.toUser((Player) event.getPlayer());
+		User user = API.to((Player) event.getPlayer());
 		if (user == null) return;
-		user.getGuiManager().close(true);
+		user.get(API.USER.GUI).close(true);
 	}
 	
 }

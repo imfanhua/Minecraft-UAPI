@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 import me.fanhua.uapi.utils.ClassUtils;
 
-public class NBTTagString extends NBTTag {
+public final class NBTTagString extends NBTTag {
 	
 	private static Class<?> clazzNBT;
 	
