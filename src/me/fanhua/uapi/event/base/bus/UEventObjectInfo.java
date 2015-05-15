@@ -34,7 +34,7 @@ public final class UEventObjectInfo {
 	public static class MethodInfo {
 		
 		private static MethodInfo getInfo(Class<?> arg, Method method) {
-			if (!UEvent.class.isInstance(arg)) return null;
+			if (!UEvent.class.isAssignableFrom(arg)) return null;
 			return new MethodInfo((Class<? extends UEvent>) arg, method);
 		}
 		

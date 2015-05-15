@@ -55,7 +55,6 @@ public final class MapManager {
 		try {
 			return (int) this.methodGetSize.invoke(this.maps, "map");
 		} catch (Throwable error) {
-			error.printStackTrace();
 			return -1;
 		}
 	}

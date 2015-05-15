@@ -37,6 +37,11 @@ public abstract class NBTTag {
 		return this.getObject().equals(object);
 	}
 	
+	@Override
+	public String toString() {
+		return this.getObject().toString();
+	}
+	
 	public abstract Object getObject();
 	public abstract NBTType getType();
 	public abstract NBTTag copy();

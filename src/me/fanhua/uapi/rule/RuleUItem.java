@@ -1,7 +1,7 @@
 package me.fanhua.uapi.rule;
 
 import me.fanhua.uapi.UAPI;
-import me.fanhua.uapi.listener.UEntityListener;
+import me.fanhua.uapi.listener.UItemListener;
 import me.fanhua.uapi.manager.EventManager;
 import me.fanhua.uapi.manager.RuleManager;
 import me.fanhua.uapi.manager.UItemManager;
@@ -30,7 +30,7 @@ public final class RuleUItem implements IRule {
 		
 		UItemManager.newInstance();
 		
-		EventManager.addListener(UAPI.getInstance(), new UEntityListener());
+		EventManager.addListener(UAPI.getInstance(), new UItemListener());
 		return true;
 	}
 

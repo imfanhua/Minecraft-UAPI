@@ -19,6 +19,8 @@ public abstract class UItem {
 		this.bus = new UBus();
 		this.bus.register(this);
 		
+		this.id = id;
+		
 		item = item.clone();
 		item.setAmount(1);
 		

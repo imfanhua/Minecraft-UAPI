@@ -36,7 +36,16 @@ public abstract class UItemEvent extends UEventCancelable {
 		this.item = item;
 	}
 	
-	public boolean use() {
+	public boolean useDurability() {
+		if (this.item == null) return false;
+		if (this.user.isGameMode(GameMode.CREATIVE)) return true;
+		short durability = (short) (this.item.getDurability() + 1);
+		if (durability > this.item.getType().getMaxDurability()) this.item = null;
+		else this.item.setDurability(durability);
+		return true;
+	}
+	
+	public boolean useAmount() {
 		if (this.item == null) return false;
 		if (this.user.isGameMode(GameMode.CREATIVE)) return true;
 		int amount = this.item.getAmount() - 1;

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class UItemEventClick extends UItemEvent {
 	
-	public boolean leftButton;
+	private boolean leftButton;
 	
 	public UItemEventClick(User user, UItem object, ItemStack item, boolean leftButton) {
 		super(user, object, item);

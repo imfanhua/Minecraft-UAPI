@@ -19,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -120,6 +121,24 @@ public class UItemListener implements Listener {
 		item = result.getItem();
 		if (item == null) entity.remove();
 		else entity.setItemStack(item.clone());
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onHangingBreakByEntityEvent(HangingBreakByEntityEvent event) {
+		User user = API.to(event.getRemover());
+		if (user == null) return;
+		ItemStack item = user.getItemInHand();
+		UItem object = UItemManager.getInstance().getItem(item);
+		if (object == null) return;
+		
+		UItemEvent result = 
+				object.call(new UItemEventClick(user, object, item, true),
+				object.call(new UItemEventClickEntity(user, object, item, true, event.getEntity()))
+				);
+		if (result.isCancelled()) {
+			user.setItemInHand(result.getItem());
+			event.setCancelled(true);
+		}
 	}
 	
 }

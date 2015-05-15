@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 
 import me.fanhua.uapi.item.UItem;
 import me.fanhua.uapi.nbt.NBT;
-import me.fanhua.uapi.nbt.NBTTagCompound;
 import me.fanhua.uapi.nbt.NBTTagString;
 import me.fanhua.uapi.rule.RuleUItem;
 import me.fanhua.uapi.utils.ItemUtils;
@@ -41,8 +40,7 @@ public final class UItemManager {
 	}
 	
 	public UItem getItem(ItemStack item) {
-		NBTTagCompound tag = ItemUtils.getNBT(item);
-		NBTTagString id = tag.get("uitem", NBT.STRING);
+		NBTTagString id = ItemUtils.getNBT(item).get("uitem", NBT.STRING);
 		if (id == null) return null;
 		return this.getItem(id.get());
 	}
